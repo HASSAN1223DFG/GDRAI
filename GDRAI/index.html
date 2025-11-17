@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ذكاء الأسئلة</title>
+<style>
+    body { font-family: Arial; background:#0b0f19; color:white; text-align:center; padding:20px; }
+    .box { max-width:600px; margin:auto; background:#111729; padding:20px; border-radius:15px; }
+    textarea { width:100%; height:100px; background:#1b2338; color:white; border:none; border-radius:10px; padding:10px; }
+    button { margin-top:10px; padding:10px 20px; background:#4a8bff; color:white; border:none; border-radius:10px; cursor:pointer; }
+    .answer { margin-top:20px; background:#202a3f; padding:15px; border-radius:10px; white-space:pre-wrap; text-align:left; }
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h1>🤖 ذكاء الأسئلة</h1>
+
+    <textarea id="question" placeholder="اكتب سؤالك هنا..."></textarea>
+    <button onclick="askAI()">اسأل</button>
+
+    <div class="answer" id="answer">الجواب سيظهر هنا...</div>
+</div>
+
+<script>
+async function askAI() {
+    let q = document.getElementById("question").value;
+    let a = document.getElementById("answer");
+    a.textContent = "⏳ جاري التفكير...";
+
+    try {
+        let response = await fetch("/api/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: q })
+        });
+
+        let data = await response.json();
+        a.textContent = data.answer;
+
+    } catch {
+        a.textContent = "⚠ حدث خطأ أثناء الاتصال بالسيرفر.";
+    }
+}
+</script>
+
+</body>
+</html>
